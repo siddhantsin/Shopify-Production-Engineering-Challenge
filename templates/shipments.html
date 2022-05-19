@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Inventory Tracking App</title>
+  </head>
+  
+  <body>
+    <div class="jumbotron p-3">
+      <div class="well text-center">
+        <h1>Shipments</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col md-12">
+          
+          <h2>Shipments 
+            <a href="/" class="btn btn-info float-right">
+              Go to Inventory
+            </a>
+            <button 
+              class="btn btn-success float-right" 
+              data-toggle="modal" 
+              data-target="#modaladd">
+              Add New Shipment
+            </button>
+          </h2>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">{{message}}
+            <button 
+              type="button" 
+              class="close" 
+              data-dismiss="alert" 
+              aria-label="close">
+                <span aria-hidden="true">x</span>
+            </button>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+
+          {% for row in shipments %}
+          <h3>Shipment Name: {{row.name}}
+          <span class="float-right"> Shipment ID: {{row.id}}</span>
+          </h3>
+          <table class="table table-hover table-dark">
+            <tr>
+              <th>Item ID</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+            {% with items = row.itemList %}
+            {% for item in items %}
+            <tr>
+              <td>{{item.itemid}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.quantity}}</td>
+              <td>
+                <a 
+                  href="" 
+                  class="btn btn-warning btn-xs" 
+                  data-toggle="modal" 
+                  data-target="#modaledit{{row.id}}-{{item.id}}">
+                  Edit
+                </a>
+                <a 
+                  href="" 
+                  class="btn btn-danger btn-xs" 
+                  onclick="return confirm('Are you sure about that?')">
+                  Delete
+                </a>
+              </td>
+            </tr>
+            
+            <!-- Modal EDIT Item-->
+ 
+<div id="modaledit{{row.id}}-{{item.id}}" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+ 
+            <h4 class="modal-title">Edit Item</h4>
+         </div>
+         <div class="modal-body">
+ 
+            <form action="{{url_for('editShipmentItem')}}" method="POST">
+
+                <div class="form-group">
+                  <input type="hidden" name="itemid" value="{{item.itemid}}">
+                  <input type="hidden" name="id" value="{{item.id}}">
+                  <input type="hidden" name="shipmentid" value="{{row.id}}">
+                  <label>Quantity:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="quantity" 
+                    required="1"
+                    value="{{item.quantity}}">
+               </div>
+              
+               <div class="form-group">
+                  <button 
+                    class="btn btn-primary" 
+                    type="submit">
+                    Update Item
+                  </button>
+               </div>
+              
+            </form>
+         </div>
+        
+         <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">
+              Close
+            </button>
+         </div>
+        
+      </div>
+   </div>
+</div>
+        <!-- END MODAL EDIT ITEM -->
+            
+            {% endfor %}
+            {% endwith %}
+          </table>
+          {% endfor %}
+          
+        </div>
+        
+         <!-- Modal Add Shipment-->
+ 
+ 
+<div id="modaladd" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+ 
+            <h4 class="modal-title">Add Shipment</h4>
+         </div>
+         <div class="modal-body">
+ 
+            <form action="{{url_for('createShipment')}}" method="POST">
+ 
+               <div class="form-group">
+                  <label>Shipment Name:</label>
+                  <input type="text" class="form-control" name="name" required="1">
+               </div>
+              
+               <div class="form-group">
+                  <button 
+                    class="btn btn-primary" 
+                    type="submit">
+                    Add Item
+                  </button>
+               </div>
+              
+            </form>
+         </div>
+        
+         <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">
+              Close
+            </button>
+         </div>
+        
+      </div>
+   </div>
+</div>
+
+        <!-- END MODAL ADD SHIPMENT -->
+        
+      </div>
+    </div>
+  </body>
+</html>

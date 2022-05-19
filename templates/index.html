@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Inventory Tracking App</title>
+  </head>
+  
+  <body>
+    <div class="jumbotron p-3">
+      <div class="well text-center">
+        <h1>Inventory Tracking App</h1>
+      </div>
+    </div>
+    
+
+    <div class="container">
+      <div class="row">
+        <div class="col md-12">
+          <a href="/shipments" class="btn btn-info float-right">Go to Shipments</a>
+          <h2>Inventory Items 
+            <button 
+              class="btn btn-success float-right" 
+              data-toggle="modal" 
+              data-target="#modaladd">
+              Add New Item
+            </button>
+          </h2>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">{{message}}
+            <button 
+              type="button" 
+              class="close" 
+              data-dismiss="alert" 
+              aria-label="close">
+                <span aria-hidden="true">x</span>
+            </button>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <table class="table table-hover table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>City</th>
+              <th>Weather</th>
+              <th>Actions</th>
+            </tr>
+
+            {% for row in inventory %}
+            <tr>
+              <td>{{row.id}}</td>
+              <td>{{row.name}}</td>
+              <td>{{row.quantity}}</td>
+              <td>{{row.city}}</td>
+              <td>Sunny</td>
+              <td>
+                <a 
+                  href="/updateInventoryItem/{{row.id}}" 
+                  class="btn btn-warning btn-xs" 
+                  data-toggle="modal" 
+                  data-target="#modaledit{{row.id}}">
+                  Edit
+                </a>
+                <a 
+                  href="/updateInventoryItem/{{row.id}}" 
+                  class="btn btn-info btn-xs" 
+                  data-toggle="modal" 
+                  data-target="#modalassign{{row.id}}">
+                  Assign
+                </a>
+                <a 
+                  href="/removeInventoryItem/{{row.id}}" 
+                  class="btn btn-danger btn-xs" 
+                  onclick="return confirm('Are you sure abt that?')">
+                  Delete
+                </a>
+              </td>
+            </tr>
+
+             <!-- Modal EDIT Item-->
+ 
+ 
+<div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+ 
+            <h4 class="modal-title">Edit Item</h4>
+         </div>
+         <div class="modal-body">
+ 
+            <form action="{{url_for('editInventoryItem')}}" method="POST">
+ 
+               <div class="form-group">
+                  <label>Item Name:</label>
+                  <input type="hidden" name="id" value="{{row.id}}">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    name="name" 
+                    required="1"
+                    value="{{row.name}}">
+               </div>
+
+                <div class="form-group">
+                  <label>Quantity:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="quantity" 
+                    required="1"
+                    value="{{row.quantity}}">
+               </div>
+ 
+                <div class="form-group">
+                  <label>City:</label>
+                  <select 
+                    class="form-control" 
+                    name="city"
+                    id="city">
+                    <option 
+                      {% if row.city=='Toronto' %} selected="selected"{% endif %} 
+                      value="Toronto">Toronto</option>
+                    <option 
+                      {% if row.city=='Edmonton' %} selected="selected"{% endif %}
+                      value="Edmonton">Edmonton</option>
+                    <option 
+                      {% if row.city=='Vancouver' %} selected="selected"{% endif %}
+                      value="Vancouver">Vancouver</option>
+                    <option 
+                      {% if row.city=='Ottawa' %} selected="selected"{% endif %}
+                      value="Ottawa">Ottawa</option>
+                    <option 
+                      {% if row.city=='Montreal' %} selected="selected"{% endif %}
+                      value="Montreal">Montreal</option>
+                </select>
+               </div>
+              
+               <div class="form-group">
+                  <button 
+                    class="btn btn-primary" 
+                    type="submit">
+                    Update Item
+                  </button>
+               </div>
+              
+            </form>
+         </div>
+        
+         <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">
+              Close
+            </button>
+         </div>
+        
+      </div>
+   </div>
+</div>
+        <!-- END MODAL EDIT ITEM -->
+
+            
+             <!-- Modal ASSIGN Item-->
+ 
+ 
+<div id="modalassign{{row.id}}" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+ 
+            <h4 class="modal-title">Assign Item to Shipment</h4>
+         </div>
+         <div class="modal-body">
+ 
+            <form action="{{url_for('addShipmentItem')}}" method="POST">
+ 
+               <div class="form-group">
+                  <input type="hidden" name="itemid" value="{{row.id}}">
+               </div>
+
+                <div class="form-group">
+                  <label>Quantity:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="quantity" 
+                    required="1"
+                    value="{{row.quantity}}">
+               </div>
+              
+                <div class="form-group">
+                  <label>Shipment ID:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="shipmentid" 
+                    required="1">
+               </div>
+              
+               <div class="form-group">
+                  <button 
+                    class="btn btn-primary" 
+                    type="submit">
+                    Assign to Shipment
+                  </button>
+               </div>
+              
+            </form>
+         </div>
+        
+         <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">
+              Close
+            </button>
+         </div>
+        
+      </div>
+   </div>
+</div>
+{% endfor %}
+        <!-- END MODAL ASSIGN ITEM -->
+          </table>
+        </div>
+
+        
+        <!-- Modal Add Item-->
+ 
+ 
+<div id="modaladd" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+ 
+            <h4 class="modal-title">Add Item</h4>
+         </div>
+         <div class="modal-body">
+ 
+            <form action="{{url_for('addInventoryItem')}}" method="POST">
+ 
+               <div class="form-group">
+                  <label>Item Name:</label>
+                  <input type="text" class="form-control" name="name" required="1">
+               </div>
+
+                <div class="form-group">
+                  <label>Quantity:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="quantity" 
+                    required="1">
+               </div>
+ 
+                <div class="form-group">
+                  <label>City:</label>
+                  <select 
+                    class="form-control" 
+                    name="city"
+                    id="city">
+                    <option selected value="Toronto">Toronto</option>
+                    <option value="Edmonton">Edmonton</option>
+                    <option value="Vancouver">Vancouver</option>
+                    <option value="Ottawa">Ottawa</option>
+                    <option value="Montreal">Montreal</option>
+                </select>
+               </div>
+              
+               <div class="form-group">
+                  <button 
+                    class="btn btn-primary" 
+                    type="submit">
+                    Add Item
+                  </button>
+               </div>
+              
+            </form>
+         </div>
+        
+         <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">
+              Close
+            </button>
+         </div>
+        
+      </div>
+   </div>
+</div>
+
+        <!-- END MODAL ADD ITEM -->
+        
+      </div>
+    </div>
+
+  </body>
+</html>
