@@ -12,25 +12,37 @@ def createShipment():
     return redirect(url_for('shipmentsIndex'))
 
 def addShipmentItem():
-  if request.method == 'POST':
-    itemid = request.form.get('itemid')
-    shipmentid = request.form.get('shipmentid')
-    quantity = request.form.get('quantity')
-    insertShipmentItem(int(shipmentid), int(itemid), int(quantity))
-    flash("Added item to shipment successfully!")
-    return redirect(url_for('shipmentsIndex'))
+  try:
+    if request.method == 'POST':
+      itemid = request.form.get('itemid')
+      shipmentid = request.form.get('shipmentid')
+      quantity = request.form.get('quantity')
+      insertShipmentItem(int(shipmentid), int(itemid), int(quantity))
+      flash("Added item to shipment successfully!")
+      return redirect(url_for('shipmentsIndex'))
+  except ValueError:
+    flash("Please input correct values")
+    return redirect(url_for('shipmentsIndex'), code=400)
     
 def editShipmentItem():
-  if request.method == 'POST':
-    id = request.form.get('id')
-    itemid = request.form.get('itemid')
-    shipmentid = request.form.get('shipmentid')
-    quantity = request.form.get('quantity')
-    updateShipmentItem(int(id), int(itemid), int(shipmentid), int(quantity))
-    flash("Item updated successfully!")
-    return redirect(url_for('shipmentsIndex'))
+  try:
+    if request.method == 'POST':
+      id = request.form.get('id')
+      itemid = request.form.get('itemid')
+      shipmentid = request.form.get('shipmentid')
+      quantity = request.form.get('quantity')
+      updateShipmentItem(int(id), int(itemid), int(shipmentid), int(quantity))
+      flash("Item updated successfully!")
+      return redirect(url_for('shipmentsIndex'))
+  except ValueError:
+    flash("Please input correct values")
+    return redirect(url_for('shipmentsIndex'), code=400)
     
 def removeShipmentItem(shipmentid, itemid, id):
-  deleteShipmentItemById(int(shipmentid), int(itemid), int(id))
-  flash("Item deleted successfully!")
-  return redirect(url_for('shipmentsIndex'))
+  try:
+    deleteShipmentItemById(int(shipmentid), int(itemid), int(id))
+    flash("Item deleted successfully!")
+    return redirect(url_for('shipmentsIndex'))
+  except ValueError:
+    flash("Please input correct values")
+    return redirect(url_for('shipmentsIndex'), code=400)

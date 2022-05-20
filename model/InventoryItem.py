@@ -17,9 +17,13 @@ def updateInventoryItemDB(id, updatedItem):
   # Since ids are incremental order, find can be done more 
   # efficiently using binary search.
   index = findByBinarySearch(db["INVENTORY_ITEMS"], id)
+  if index == -1:
+    raise ValueError
   updatedItem['id'] = int(id)
   db["INVENTORY_ITEMS"][index] = updatedItem
 
 def deleteInventoryItemByIdDB(id):
   index = findByBinarySearch(db["INVENTORY_ITEMS"], id)
+  if index == -1:
+    raise ValueError
   db["INVENTORY_ITEMS"].pop(index)

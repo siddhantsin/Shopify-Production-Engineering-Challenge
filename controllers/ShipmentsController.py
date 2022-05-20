@@ -1,11 +1,17 @@
 from controllers.InventoryItemController import updateInventoryItem, getInventoryItemById
-from model.Shipments import insertShipmentItemToDB, insertShipmentDB, getShipmentsDB, getShipmentItemByIdDB, updateShipmentItemDB, deleteShipmentItemByIdDB
+from model.Shipments import insertShipmentItemToDB, insertShipmentDB, getShipmentsDB, getShipmentItemByIdDB, updateShipmentItemDB, deleteShipmentItemByIdDB, getShipmentItemByItemIdDB, getShipmentByIdDB
 
 def getShipments():
   return getShipmentsDB()
+  
+def getShipmentById(id):
+  return getShipmentByIdDB(id)
 
 def getShipmentItemById(shipmentid, id):
   return getShipmentItemByIdDB(shipmentid, id)
+
+def getShipmentItemByItemId(shipmentid, itemid):
+  return getShipmentItemByItemIdDB(shipmentid, itemid)
   
 def insertShipment(name):
   insertShipmentDB(name)
@@ -13,12 +19,16 @@ def insertShipment(name):
 def insertShipmentItem(shipmentid, itemid, quantity):
   quantity = int(quantity)
   item = getInventoryItemById(itemid)
-  if item['quantity'] < quantity or item is None:
+  if item is None or item['quantity'] < quantity or getShipmentById(shipmentid) is None:
     raise ValueError
   else:
     item['quantity'] = item['quantity'] - quantity
     updateInventoryItem(itemid, item)
-  insertShipmentItemToDB(shipmentid, item, quantity)
+  shipmentItem = getShipmentItemByItemIdDB(shipmentid, item['id'])
+  if shipmentItem is None:
+    insertShipmentItemToDB(shipmentid, item, quantity)
+  else:
+    updateShipmentItem(shipmentItem['id'], itemid, shipmentid, quantity + shipmentItem['quantity'])
 
 def updateShipmentItem(id, itemid, shipmentid, quantity):
   inventoryItem = getInventoryItemById(itemid)

@@ -31,7 +31,7 @@
           {% with messages = get_flashed_messages() %}
           {% if messages %}
           {% for message in messages %}
-          <div class="alert alert-success alert-dismissable">{{message}}
+          <div class="alert alert-info alert-dismissable">{{message}}
             <button 
               type="button" 
               class="close" 
@@ -59,7 +59,7 @@
               <td>{{row.name}}</td>
               <td>{{row.quantity}}</td>
               <td>{{row.city}}</td>
-              <td>Sunny</td>
+              <td>{{weather[row.city]}}</td>
               <td>
                 <a 
                   href="/updateInventoryItem/{{row.id}}" 

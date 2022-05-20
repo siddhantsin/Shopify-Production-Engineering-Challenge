@@ -1,7 +1,8 @@
 from model.InventoryItem import insertInventoryItemDB, getInventoryItemsDB, updateInventoryItemDB, deleteInventoryItemByIdDB, getInventoryItemByIdDB
 
 def getInventoryItems():
-  return getInventoryItemsDB()
+  allItems = getInventoryItemsDB()
+  return allItems
 
 def getInventoryItemById(id):
   return getInventoryItemByIdDB(id)
@@ -10,8 +11,6 @@ def insertInventoryItem(item):
   insertInventoryItemDB(item)
 
 def updateInventoryItem(id, updatedItem):
-  # Since ids are incremental order, find can be done more 
-  # efficiently using binary search.
   updateInventoryItemDB(id, updatedItem)
 
 def deleteInventoryItemById(id):
