@@ -1,4 +1,4 @@
-from controllers.InventoryItemController import insertInventoryItem, getInventoryItems, updateInventoryItem, deleteInventoryItemById, getInventoryItemById
+from controllers.InventoryItemController import updateInventoryItem, getInventoryItemById
 from model.Shipments import insertShipmentItemToDB, insertShipmentDB, getShipmentsDB, getShipmentItemByIdDB, updateShipmentItemDB, deleteShipmentItemByIdDB
 
 def getShipments():

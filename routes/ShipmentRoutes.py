@@ -1,5 +1,4 @@
 from flask import render_template, request, redirect, url_for, flash
-from controllers.InventoryItemController import insertInventoryItem, getInventoryItems, updateInventoryItem, deleteInventoryItemById, getInventoryItemById
 from controllers.ShipmentsController import insertShipmentItem, insertShipment, getShipments, updateShipmentItem, deleteShipmentItemById
 
 def shipmentsIndex():

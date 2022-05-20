@@ -7,7 +7,6 @@ def getInventoryItemById(id):
   return getInventoryItemByIdDB(id)
 
 def insertInventoryItem(item):
-  item['quantity'] = int(item['quantity'])
   insertInventoryItemDB(item)
 
 def updateInventoryItem(id, updatedItem):
