@@ -4,6 +4,9 @@ def findByBinarySearch(itemList, id):
   mid = 0
   compareId = int(id)
 
+  if len(itemList) == 0:
+    return -1
+
   while low <= high:
       mid = (high + low) // 2
       if int(itemList[mid]['id']) < compareId:

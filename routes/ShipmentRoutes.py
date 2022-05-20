@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
 from controllers.InventoryItemController import insertInventoryItem, getInventoryItems, updateInventoryItem, deleteInventoryItemById, getInventoryItemById
-from model.Shipments import insertShipment, getShipments
-from controllers.ShipmentsController import insertShipmentItem
+from controllers.ShipmentsController import insertShipmentItem, insertShipment, getShipments, updateShipmentItem, deleteShipmentItemById
 
 def shipmentsIndex():
   allItems = getShipments()
@@ -18,22 +17,21 @@ def addShipmentItem():
     itemid = request.form.get('itemid')
     shipmentid = request.form.get('shipmentid')
     quantity = request.form.get('quantity')
-    insertShipmentItem(shipmentid, itemid, quantity)
+    insertShipmentItem(int(shipmentid), int(itemid), int(quantity))
     flash("Added item to shipment successfully!")
     return redirect(url_for('shipmentsIndex'))
     
 def editShipmentItem():
   if request.method == 'POST':
     id = request.form.get('id')
-    newItem = {}
-    newItem["name"] = request.form.get('name')
-    newItem["city"] = request.form.get('city')
-    newItem["quantity"] = request.form.get('quantity')
-    updateInventoryItem(id, newItem)
+    itemid = request.form.get('itemid')
+    shipmentid = request.form.get('shipmentid')
+    quantity = request.form.get('quantity')
+    updateShipmentItem(int(id), int(itemid), int(shipmentid), int(quantity))
     flash("Item updated successfully!")
     return redirect(url_for('shipmentsIndex'))
     
-def removeShipmentItem(id):
-  deleteInventoryItemById(id)
+def removeShipmentItem(shipmentid, itemid, id):
+  deleteShipmentItemById(int(shipmentid), int(itemid), int(id))
   flash("Item deleted successfully!")
   return redirect(url_for('shipmentsIndex'))
