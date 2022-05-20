@@ -1,12 +1,13 @@
 import os
+import sys
 import routes.ItemRoutes as ItemRoutes
 import routes.ShipmentRoutes as ShipmentRoutes
 from flask import Flask
-from model.init import initInventoryDB
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
-initInventoryDB()
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
 
 app.add_url_rule('/', view_func=ItemRoutes.index)
 app.add_url_rule('/addInventoryItem', methods=["POST"], view_func=ItemRoutes.addInventoryItem)
