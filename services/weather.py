@@ -31,7 +31,7 @@ async def getWeatherInfo():
     minutes = totalSeconds/60
 
   # cache weather every 5 minutes
-  if not cached or minutes > 1:
+  if not cached or minutes > 5:
     # Run the requests parallely to save on request time
     ret = {}
     async with aiohttp.ClientSession() as session:
